@@ -1,0 +1,6 @@
+.DS_Store
+assets/.DS_Store
+# Archivos originales pesados no usados en el sitio
+assets/fondo cielo.png
+assets/katana nueva.png
+assets/papel japones.png
