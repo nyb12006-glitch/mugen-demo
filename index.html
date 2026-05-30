@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MUGEN — Sin límite. Sin destino. Solo el camino.">
+  <title>MUGEN — 無限</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #05050d;
+      --dark:  #0c0c17;
+      --red-b: #bb0000;
+      --red-v: #cc0000;
+      --gold:  #c9a84c;
+      --white: #f4efe8;
+      --dim:   rgba(244,239,232,.56);
+      --gray:  #887d6c;
+      --fd: 'Cinzel', Georgia, serif;
+      --fs: 'Cormorant Garamond', Georgia, serif;
+      --fj: 'Shippori Mincho', 'Hiragino Mincho ProN', Georgia, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black); color: var(--white);
+      font-family: var(--fs); overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; }
+
+    /* ── NAV ─────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      padding: 1.4rem 6%;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background .4s;
+    }
+    nav.s { background: rgba(5,5,13,.9); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .nav-logo { font-family: var(--fd); font-size: 1.05rem; font-weight: 700; letter-spacing: .35em; color: var(--white); text-decoration: none; }
+    .nav-logo b { color: var(--red-v); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a { font-family: var(--fd); font-size: .62rem; letter-spacing: .22em; color: var(--dim); text-decoration: none; text-transform: uppercase; transition: color .3s; }
+    .nav-links a:hover { color: var(--white); }
+
+    /* ── HERO WRAP (sticky scroll container) ───── */
+    #hero-wrap { height: 520vh; position: relative; }
+
+    #hero {
+      position: sticky; top: 0;
+      height: 100vh; height: 100svh;
+      min-height: 580px;
+      /* Sin overflow:hidden — el clip solo aplica al contenedor de montañas */
+    }
+    /* Clip solo para las montañas (entran desde abajo) */
+    .h-clip {
+      position: absolute; inset: 0;
+      overflow: hidden; z-index: 3; pointer-events: none;
+    }
+
+    /* Sky — always visible */
+    .h-sky {
+      position: absolute; inset: 0; z-index: 1;
+      background: url('assets/fondo-cielo-web.jpg') center/cover no-repeat;
+    }
+
+    /* Gradient overlay */
+    .h-ov {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background: linear-gradient(to bottom,
+        rgba(5,5,13,.48) 0%, rgba(5,5,13,.05) 28%,
+        rgba(5,5,13,.05) 58%, rgba(5,5,13,.72) 84%,
+        rgba(5,5,13,.97) 100%);
+    }
+
+    /* Mountains — dentro de .h-clip, JS controla transform+opacity */
+    .h-mtn {
+      position: absolute; bottom: 0; left: 50%;
+      width: max(100%, 900px); height: auto;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(-50%) translateY(120vh);
+      will-change: transform, opacity;
+    }
+
+    /* Kanji group — reemplaza la katana, entra desde la derecha */
+    .h-kanji-group {
+      position: absolute; top: 50%; left: 62%; z-index: 5;
+      transform: translate(-50%, -50%);
+      opacity: 0; pointer-events: none;
+      display: flex; flex-direction: column; align-items: center;
+      gap: .05em;
+    }
+    .hkg {
+      display: block;
+      font-family: 'Hiragino Mincho ProN', 'Hiragino Mincho Pro', 'Yu Mincho', 'MS Mincho', serif;
+      font-size: clamp(4.5rem, 9vw, 9rem);
+      line-height: 1;
+      color: var(--red-v);
+      text-shadow: 0 0 55px rgba(204,0,0,.7), 0 0 110px rgba(204,0,0,.28);
+      letter-spacing: .02em;
+    }
+
+    /* Text block */
+    .h-content {
+      position: absolute; inset: 0; z-index: 7;
+      display: flex; flex-direction: column;
+      justify-content: flex-end; align-items: flex-start;
+      padding: 0 7% 7%; pointer-events: none;
+      overflow: hidden;
+    }
+
+    .h-kanji {
+      font-family: var(--fs); font-style: italic; font-weight: 300;
+      font-size: clamp(2.8rem,7vw,6.5rem); line-height: 1;
+      letter-spacing: .08em; color: rgba(192,57,43,.22);
+      margin-bottom: -.28em;
+      opacity: 0; will-change: opacity;
+    }
+    .h-brand {
+      font-family: var(--fd); font-weight: 900;
+      font-size: clamp(3.8rem,11vw,9.5rem); line-height: 1;
+      letter-spacing: .18em; color: var(--white);
+      opacity: 0; transform: translateY(28px);
+      will-change: opacity, transform;
+    }
+    .h-tagline {
+      font-family: var(--fj); font-style: normal; font-weight: 400;
+      font-size: clamp(1rem,1.9vw,1.45rem);
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 0 28px rgba(204,0,0,.55);
+      letter-spacing: .18em;
+      margin-top: .8rem; min-height: 1.8em;
+      opacity: 0; transform: translateY(18px);
+      will-change: opacity, transform;
+    }
+    .tw-cursor { color: var(--red-v); animation: blink .75s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .h-rule { height: 1px; background: var(--red-v); margin: 1.2rem 0 1rem; width: 0; will-change: width; }
+    .h-sub {
+      font-family: var(--fj); font-size: clamp(.78rem,1.2vw,.95rem); font-weight: 400;
+      letter-spacing: .42em; color: rgba(255,255,255,.55); text-transform: uppercase;
+      opacity: 0; will-change: opacity;
+    }
+    .h-cta {
+      display: inline-block; margin-top: 1.8rem;
+      padding: .82rem 2.3rem;
+      border: 1px solid rgba(192,57,43,.5);
+      font-family: var(--fd); font-size: .63rem;
+      letter-spacing: .24em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+      position: relative; overflow: hidden;
+      pointer-events: auto;
+      opacity: 0; transform: translateY(15px);
+      will-change: opacity, transform;
+      transition: border-color .35s;
+    }
+    .h-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--red-b); transform: translateX(-102%);
+      transition: transform .38s cubic-bezier(.25,.46,.45,.94);
+    }
+    .h-cta:hover { border-color: var(--red-b); }
+    .h-cta:hover::before { transform: translateX(0); }
+    .h-cta > span { position: relative; z-index: 1; }
+
+    /* Scroll hint */
+    .h-hint {
+      position: absolute; bottom: 2.2rem; left: 50%;
+      transform: translateX(-50%); z-index: 8;
+      display: flex; flex-direction: column; align-items: center; gap: .45rem;
+      pointer-events: none; will-change: opacity;
+    }
+    .h-hint-txt { font-family: var(--fd); font-size: .52rem; letter-spacing: .32em; color: var(--gray); text-transform: uppercase; }
+    .h-hint-ln { width: 1px; height: 36px; background: linear-gradient(to bottom, var(--gray), transparent); animation: pdwn 1.8s ease-in-out infinite; }
+    @keyframes pdwn { 0%,100%{opacity:.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.3)} }
+
+    /* ── SHARED ─────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(34px); transition: opacity .85s ease, transform .85s ease; }
+    .reveal.v { opacity: 1; transform: translateY(0); }
+
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 7%; }
+
+    .lbl { font-family: var(--fd); font-size: .6rem; letter-spacing: .42em; color: var(--red-b); text-transform: uppercase; margin-bottom: 1.4rem; display: block; }
+
+    .h2 { font-family: var(--fd); font-weight: 700; font-size: clamp(1.9rem,3.8vw,3.3rem); line-height: 1.13; color: var(--white); }
+    .h2 em { font-style: italic; color: #cf4040; font-family: var(--fs); font-weight: 300; }
+
+    /* ── MANIFESTO ──────────────────────────── */
+    #manifesto {
+      position: relative; min-height: 90vh;
+      padding: 9rem 0 10rem; overflow: hidden;
+      background-color: #08080f;
+      background-image:
+        repeating-linear-gradient(0deg, transparent 0, transparent 27px, rgba(255,255,255,.014) 27px, rgba(255,255,255,.014) 28px),
+        radial-gradient(ellipse at 50% 100%, rgba(122,21,21,.1) 0%, transparent 55%),
+        radial-gradient(ellipse at center, transparent 55%, rgba(5,5,13,.7) 100%);
+    }
+
+    /* Tori — paralax scroll-driven de arriba a abajo, JS controla transform+opacity */
+    .mf-tori {
+      position: absolute; bottom: 0; left: 50%;
+      width: max(100%,1100px); height: auto;
+      transform: translateX(-50%) translateY(-110vh);
+      z-index: 2; /* por encima del overlay (.mf-ov z-index:1) para que sea visible */
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0;
+    }
+
+    .mf-ov {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(to bottom,
+        rgba(8,8,15,.95) 0%, rgba(8,8,15,.6) 28%,
+        rgba(8,8,15,.28) 55%, rgba(8,8,15,.72) 100%);
+    }
+
+    .mf-wm {
+      position: absolute; top: 50%; right: -2%; transform: translateY(-50%);
+      font-family: var(--fs); font-weight: 300;
+      font-size: clamp(18rem,35vw,35rem); line-height: 1;
+      color: rgba(255,255,255,.022); pointer-events: none; user-select: none; z-index: 2;
+    }
+
+    .mf-inner { position: relative; z-index: 3; max-width: 1180px; margin: 0 auto; padding: 0 7%; }
+
+    .mf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; margin-bottom: 6rem; }
+
+    .mf-left { position: relative; padding-left: 2rem; }
+    .mf-left::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 2px;
+      height: 100%; background: var(--red-v);
+      transform: scaleY(0); transform-origin: top; transition: transform 1s ease .3s;
+    }
+    .mf-left.v::before { transform: scaleY(1); }
+
+    .mf-body p { font-family: var(--fs); font-weight: 500; font-size: clamp(1rem,1.45vw,1.22rem); line-height: 1.9; color: rgba(244,239,232,.88); margin-bottom: 1.4rem; }
+
+    .mf-quote { border-top: 1px solid rgba(255,255,255,.055); border-bottom: 1px solid rgba(255,255,255,.055); padding: 3.5rem 0; text-align: center; }
+    .mf-quote-jp { font-family: var(--fs); font-weight: 300; font-size: clamp(2rem,5vw,4.5rem); color: rgba(192,57,43,.22); letter-spacing: .2em; margin-bottom: .8rem; }
+    .mf-quote-tx { font-family: var(--fs); font-style: italic; font-weight: 500; font-size: clamp(1.05rem,1.7vw,1.45rem); color: rgba(244,239,232,.88); }
+
+    /* ── SERVICIOS ──────────────────────────── */
+    #servicios {
+      background-color: var(--black);
+      background-image:
+        radial-gradient(circle, rgba(204,0,0,.36) 2px, transparent 2px),
+        radial-gradient(circle, rgba(204,0,0,.20) 2px, transparent 2px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+      padding: 9rem 0 10rem;
+    }
+
+    .sv-hdr { margin-bottom: 4rem; }
+
+    .sv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,.04); }
+
+    .sv-card {
+      background: var(--black); padding: 3rem 2.5rem 3.5rem;
+      position: relative; overflow: hidden; min-height: 380px;
+      display: flex; flex-direction: column; transition: background .4s;
+    }
+    .sv-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--red-v); transform: scaleX(0); transform-origin: left; transition: transform .42s cubic-bezier(.25,.46,.45,.94); }
+    .sv-card:hover { background: rgba(115,18,18,.07); }
+    .sv-card:hover::before { transform: scaleX(1); }
+
+    .sv-bgn { position: absolute; bottom: -.15em; right: -.05em; font-family: var(--fd); font-weight: 900; font-size: 9rem; line-height: 1; color: rgba(255,255,255,.027); pointer-events: none; user-select: none; }
+    .sv-n { font-family: var(--fd); font-size: .58rem; letter-spacing: .3em; color: var(--red-b); margin-bottom: 2rem; }
+    .sv-ico { font-size: 1.5rem; margin-bottom: 1.3rem; display: block; opacity: .45; }
+    .sv-nm { font-family: var(--fd); font-weight: 700; font-size: clamp(.95rem,1.5vw,1.18rem); letter-spacing: .04em; color: var(--white); margin-bottom: .65rem; }
+    .sv-tag { font-family: var(--fs); font-size: .88rem; font-style: italic; color: var(--red-b); margin-bottom: 1.1rem; }
+    .sv-dsc { font-family: var(--fs); font-weight: 300; font-size: clamp(.87rem,1vw,.97rem); line-height: 1.85; color: var(--gray); flex: 1; }
+    .sv-arr { margin-top: 2rem; display: inline-block; font-family: var(--fd); font-size: .58rem; letter-spacing: .22em; color: var(--red-b); text-transform: uppercase; transition: letter-spacing .3s, color .3s; }
+    .sv-card:hover .sv-arr { letter-spacing: .32em; color: var(--white); }
+
+    /* ── CONTACTO ───────────────────────────── */
+    #contacto { position: relative; padding: 10rem 0 8rem; overflow: hidden; }
+    .ct-sky { position: absolute; inset: 0; background: url('assets/fondo-cielo-web.jpg') center/cover no-repeat; filter: brightness(.18) saturate(.5); pointer-events: none; }
+    .ct-mtn { position: absolute; bottom: 0; left: 50%; width: max(100%,900px); height: auto; transform: translateX(-50%); opacity: .32; pointer-events: none; }
+    .ct-ov { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, rgba(5,5,13,.85) 0%, rgba(5,5,13,.55) 50%, rgba(5,5,13,.88) 100%); }
+    .ct-in { position: relative; z-index: 2; text-align: center; max-width: 700px; margin: 0 auto; padding: 0 7%; }
+    .ct-title { font-family: var(--fd); font-weight: 700; font-size: clamp(2.5rem,6vw,5rem); line-height: 1.08; color: var(--white); margin-bottom: 1.3rem; }
+    .ct-sub { font-family: var(--fs); font-style: italic; font-weight: 300; font-size: clamp(.95rem,1.5vw,1.22rem); color: var(--dim); margin-bottom: 3rem; }
+    .ct-btn { display: inline-block; font-family: var(--fd); font-size: clamp(.65rem,1.1vw,.8rem); letter-spacing: .22em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 1.1rem 3.2rem; border: 1px solid var(--red-b); position: relative; overflow: hidden; }
+    .ct-btn::before { content: ''; position: absolute; inset: 0; background: var(--red-b); transform: translateY(102%); transition: transform .38s cubic-bezier(.25,.46,.45,.94); }
+    .ct-btn:hover::before { transform: translateY(0); }
+    .ct-btn > span { position: relative; z-index: 1; }
+
+    /* ── FOOTER ─────────────────────────────── */
+    footer { background: var(--black); border-top: 1px solid rgba(255,255,255,.045); padding: 2.4rem 7%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .ft-logo { font-family: var(--fd); font-size: .9rem; font-weight: 700; letter-spacing: .32em; color: var(--white); }
+    .ft-copy { font-family: var(--fs); font-size: .8rem; color: var(--gray); }
+    .ft-kanji { font-family: var(--fs); font-size: 1.4rem; color: rgba(192,57,43,.28); }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 1024px) {
+      .mf-grid { grid-template-columns: 1fr; gap: 3.5rem; }
+      .sv-grid  { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1.1rem 5%; }
+      .nav-links { display: none; }
+      #hero-wrap { height: 420vh; }
+      .h-mtn { width: max(140%,900px); }
+      .h-content { padding: 0 5% 9%; }
+      .h-kanji-group { left: 68%; }
+      .hkg { font-size: clamp(3rem,10vw,5rem); }
+      .mf-tori { width: max(140%,1000px); }
+      .mf-grid { gap: 2.5rem; }
+      .mf-quote { padding: 2.5rem 0; }
+      .sv-grid { grid-template-columns: 1fr; gap: 0; }
+      .sv-card { min-height: auto; padding: 2.2rem 1.8rem 2.8rem; }
+      #contacto { padding: 7rem 0 6rem; }
+      .ct-title { font-size: clamp(2rem,8vw,3.5rem); }
+      footer { flex-direction: column; text-align: center; gap: .6rem; }
+    }
+    @media (max-width: 480px) {
+      #servicios, #manifesto, #contacto { padding-top: 4.5rem; padding-bottom: 5rem; }
+      .h-kanji-group { left: 72%; }
+      .hkg { font-size: clamp(2.4rem,11vw,3.8rem); }
+      .h-brand { letter-spacing: .1em; }
+      .h-tagline { font-size: clamp(.92rem,4.2vw,1.1rem); letter-spacing: .12em; }
+      .h-sub { letter-spacing: .3em; }
+      .mf-inner { padding: 0 5%; }
+      .h2 { font-size: clamp(1.6rem,7vw,2.4rem); }
+      .mf-quote-jp { font-size: clamp(1.6rem,9vw,3rem); }
+      .mf-quote-tx { font-size: clamp(.92rem,4vw,1.1rem); }
+      .ct-btn { padding: .9rem 2rem; letter-spacing: .15em; }
+      .sv-card { padding: 1.8rem 1.4rem 2.2rem; }
+    }
+
+    /* ── REDUCED MOTION ─────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      #hero-wrap { height: 100vh; }
+      .h-kanji, .h-brand, .h-sub, .h-tagline, .h-cta { opacity: 1 !important; transform: none !important; }
+      .h-mtn         { opacity: 1 !important; transform: translateX(-50%) !important; }
+      .h-kanji-group { opacity: 1 !important; transform: translate(-50%,-50%) !important; }
+      .h-rule { width: 90px !important; }
+      .h-hint { display: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#hero-wrap" class="nav-logo">MU<b>GEN</b></a>
+  <ul class="nav-links">
+    <li><a href="#manifesto">Manifiesto</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HERO (sticky scroll sequence) ═══ -->
+<div id="hero-wrap">
+  <section id="hero" aria-label="Inicio">
+
+    <div class="h-sky" aria-hidden="true"></div>
+    <div class="h-ov"  aria-hidden="true"></div>
+
+    <!-- Clip container: solo afecta a las montañas, no a la katana -->
+    <div class="h-clip" aria-hidden="true">
+      <img class="h-mtn" id="hMtn"
+        src="assets/montañas.png" alt=""
+        draggable="false" loading="eager" decoding="async">
+    </div>
+
+    <div class="h-kanji-group" id="hKanjiGrp" aria-hidden="true">
+      <span class="hkg">無</span>
+      <span class="hkg">限</span>
+      <span class="hkg">道</span>
+    </div>
+
+    <div class="h-content">
+      <p class="h-kanji" id="hKanji" aria-hidden="true">無限</p>
+      <h1 class="h-brand" id="hBrand">MUGEN</h1>
+      <p class="h-tagline" id="hTagline" aria-label="Donde termina el límite, empieza la leyenda.">
+        <span id="hTwTxt"></span><span class="tw-cursor" id="hTwCur">|</span>
+      </p>
+      <div class="h-rule" id="hRule"></div>
+      <p class="h-sub" id="hSub">Estudio Creativo &nbsp;·&nbsp; Diseño &nbsp;·&nbsp; Estrategia</p>
+      <a href="#manifesto" class="h-cta" id="hCta"><span>Descubre el camino</span></a>
+    </div>
+
+    <div class="h-hint" id="hHint" aria-hidden="true">
+      <span class="h-hint-txt">Scroll</span>
+      <div class="h-hint-ln"></div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ═══ MANIFESTO ═══ -->
+<section id="manifesto" aria-label="Manifiesto">
+  <img class="mf-tori" src="assets/capa-tori-arboles.png" alt=""
+    draggable="false" loading="eager" decoding="async" aria-hidden="true">
+  <div class="mf-ov"  aria-hidden="true"></div>
+  <p   class="mf-wm"  aria-hidden="true">無</p>
+
+  <div class="mf-inner">
+    <div class="mf-grid">
+      <div class="mf-left reveal">
+        <span class="lbl">Manifiesto</span>
+        <h2 class="h2">El Camino<br>es la <em>Meta</em></h2>
+      </div>
+      <div class="mf-body reveal" style="transition-delay:.12s;padding-top:.6rem">
+        <p>No existe el destino para quien domina el presente. Cada trazo, cada decisión, cada proyecto nace de la misma convicción: la excelencia no se improvisa, se forja.</p>
+        <p>MUGEN no es un estudio. Es una disciplina. Como el samurái que perfecciona su técnica durante años antes de desenfundar, dedicamos cada recurso a dominar el oficio antes de presentar el trabajo.</p>
+        <p>Sin límite en la ambición. Sin destino predefinido. Solo el camino y lo que construimos en él.</p>
+      </div>
+    </div>
+    <div class="mf-quote reveal" style="transition-delay:.2s">
+      <p class="mf-quote-jp" aria-hidden="true">無限の可能性</p>
+      <p class="mf-quote-tx">«Posibilidades sin límite para quienes eligen el camino difícil.»</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICIOS ═══ -->
+<section id="servicios" aria-label="Servicios">
+  <div class="wrap">
+    <div class="sv-hdr reveal">
+      <span class="lbl">Servicios</span>
+      <h2 class="h2" style="max-width:520px">Tres <em>disciplinas</em>.<br>Un solo objetivo.</h2>
+    </div>
+    <div class="sv-grid">
+
+      <article class="sv-card reveal">
+        <span class="sv-bgn" aria-hidden="true">01</span>
+        <p class="sv-n">01</p>
+        <span class="sv-ico" aria-hidden="true">⬡</span>
+        <h3 class="sv-nm">Identidad de Marca</h3>
+        <p class="sv-tag">«Forja tu esencia»</p>
+        <p class="sv-dsc">Creamos identidades que resisten el tiempo. Logotipo, sistema visual y voz de marca construidos desde la estrategia, no desde la intuición.</p>
+        <span class="sv-arr">Saber más →</span>
+      </article>
+
+      <article class="sv-card reveal" style="transition-delay:.1s">
+        <span class="sv-bgn" aria-hidden="true">02</span>
+        <p class="sv-n">02</p>
+        <span class="sv-ico" aria-hidden="true">◈</span>
+        <h3 class="sv-nm">Diseño Digital</h3>
+        <p class="sv-tag">«Cada píxel, una intención»</p>
+        <p class="sv-dsc">Webs, interfaces y experiencias digitales donde estética y función conviven sin concesiones. Diseño que convierte sin perder belleza.</p>
+        <span class="sv-arr">Saber más →</span>
+      </article>
+
+      <article class="sv-card reveal" style="transition-delay:.2s">
+        <span class="sv-bgn" aria-hidden="true">03</span>
+        <p class="sv-n">03</p>
+        <span class="sv-ico" aria-hidden="true">◇</span>
+        <h3 class="sv-nm">Estrategia Creativa</h3>
+        <p class="sv-tag">«El arte de la guerra moderna»</p>
+        <p class="sv-dsc">Posicionamiento, narrativa de marca y contenido estratégico. Porque antes de comunicar hay que saber exactamente qué decir y a quién.</p>
+        <span class="sv-arr">Saber más →</span>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACTO ═══ -->
+<section id="contacto" aria-label="Contacto">
+  <div class="ct-sky" aria-hidden="true"></div>
+  <img class="ct-mtn" src="assets/montañas.png" alt="" draggable="false" loading="lazy" decoding="async" aria-hidden="true">
+  <div class="ct-ov" aria-hidden="true"></div>
+  <div class="ct-in">
+    <span class="lbl reveal">Inicia tu camino</span>
+    <h2 class="ct-title reveal" style="transition-delay:.1s">¿Listo para<br>forjar tu marca?</h2>
+    <p class="ct-sub reveal" style="transition-delay:.2s">Sin formularios. Sin esperas.<br>Una conversación directa.</p>
+    <a href="mailto:hola@mugen.studio" class="ct-btn reveal" style="transition-delay:.3s"><span>hola@mugen.studio</span></a>
+  </div>
+</section>
+
+<footer>
+  <span class="ft-logo">MUGEN</span>
+  <span class="ft-copy">© 2025 MUGEN Studio · Todos los derechos reservados</span>
+  <span class="ft-kanji" aria-hidden="true">無限</span>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* DOM */
+  var W        = document.getElementById('hero-wrap');
+  var mtn      = document.getElementById('hMtn');
+  var kanjiGrp = document.getElementById('hKanjiGrp');
+  var kanji    = document.getElementById('hKanji');
+  var brand= document.getElementById('hBrand');
+  var tagl = document.getElementById('hTagline');
+  var twTxt= document.getElementById('hTwTxt');
+  var twCur= document.getElementById('hTwCur');
+  var rule = document.getElementById('hRule');
+  var sub  = document.getElementById('hSub');
+  var cta  = document.getElementById('hCta');
+  var hint = document.getElementById('hHint');
+  var nav  = document.getElementById('nav');
+
+  /* Sequence timing (progress 0→1) */
+  var T = {
+    KJ_A:.04, KJ_B:.18,   /* kanji  */
+    BR_A:.02, BR_B:.14,   /* brand  */
+    MT_A:.26, MT_B:.52,   /* mountains */
+    KT_A:.44, KT_B:.68,   /* kanji group */
+    TG_A:.64, TG_B:.82,   /* tagline */
+    RL_A:.74, RL_B:.86,   /* rule   */
+    SB_A:.78, SB_B:.90,   /* sub    */
+    CA_A:.86, CA_B:.97,   /* cta    */
+  };
+
+  var TAGLINE   = 'Donde termina el límite, empieza la leyenda.';
+  var IW        = window.innerWidth;
+  var IH        = window.innerHeight;
+
+  function cl(v,a,b){ return Math.max(0,Math.min(1,(v-a)/(b-a))); }
+  function lr(a,b,t){ return a+(b-a)*t; }
+  function eo(t)    { return 1-Math.pow(1-t,3); }   /* ease-out cubic */
+
+  /* ── Draw at progress p ─────────────────── */
+  function draw(p) {
+
+    /* Kanji */
+    kanji.style.opacity = eo(cl(p,T.KJ_A,T.KJ_B)) * 0.26;
+
+    /* MUGEN brand */
+    var brP = eo(cl(p,T.BR_A,T.BR_B));
+    brand.style.opacity   = brP;
+    brand.style.transform = 'translateY('+lr(IH*0.75,0,brP)+'px)';
+
+    /* Mountains */
+    var mtP = eo(cl(p,T.MT_A,T.MT_B));
+    mtn.style.opacity   = mtP;
+    mtn.style.transform = 'translateX(-50%) translateY('+lr(IH*1.18,0,mtP)+'px)';
+
+    /* Kanji group — entra desde la derecha */
+    var kgP = eo(cl(p,T.KT_A,T.KT_B));
+    kanjiGrp.style.opacity   = kgP;
+    kanjiGrp.style.transform = 'translate(calc(-50% + '+lr(IW*1.18,0,kgP)+'px),-50%)';
+
+    /* Tagline — scroll-driven typewriter */
+    var tgRaw = cl(p,T.TG_A,T.TG_B);
+    var tgP   = eo(tgRaw);
+    tagl.style.opacity   = tgP;
+    tagl.style.transform = 'translateY('+lr(18,0,tgP)+'px)';
+    var shown = Math.round(tgRaw * TAGLINE.length);
+    twTxt.textContent = TAGLINE.slice(0, shown);
+    twCur.style.display = (shown > 0 && shown < TAGLINE.length) ? 'inline' : 'none';
+
+    /* Rule */
+    rule.style.width = lr(0,90,eo(cl(p,T.RL_A,T.RL_B)))+'px';
+
+    /* Sub */
+    sub.style.opacity = eo(cl(p,T.SB_A,T.SB_B));
+
+    /* CTA */
+    var caP = eo(cl(p,T.CA_A,T.CA_B));
+    cta.style.opacity      = caP;
+    cta.style.transform    = 'translateY('+lr(15,0,caP)+'px)';
+    cta.style.pointerEvents = caP > 0.5 ? 'auto' : 'none';
+
+    /* Scroll hint */
+    hint.style.opacity = p > 0.04 ? Math.max(0, 1-(p-0.04)/0.06) : 1;
+  }
+
+  /* ── Scroll → RAF ────────────────────────── */
+  var rafPending = false;
+
+  function getP() {
+    var top   = W.getBoundingClientRect().top;
+    var total = W.offsetHeight - IH;
+    return Math.max(0, Math.min(1, -top / total));
+  }
+
+  function updateManifesto() {
+    var rect = mfEl.getBoundingClientRect();
+    var mfH  = mfEl.offsetHeight;
+
+    /* Texto: aparece cuando el bloque llena la pantalla (rect.top ≤ 0) */
+    if (!mfRevealed && rect.top <= IH * 0.45) {
+      mfRevealed = true;
+      mfRevEls.forEach(function(el){ el.classList.add('v'); });
+    }
+
+    /* Torii: entra desde arriba solo en el tramo final del bloque
+       sectionProg 0 = bloque entrando desde abajo
+       sectionProg 1 = bloque saliendo por arriba
+       torii: de 0.68 a 0.95 (último tramo) */
+    var scrolledSinceEntry = Math.max(0, IH - rect.top);
+    var totalRange         = IH + mfH;
+    var sectionProg        = scrolledSinceEntry / totalRange;
+    var tP = eo(Math.max(0, Math.min(1, (sectionProg - 0.20) / 0.30)));
+    mfTori.style.transform = 'translateX(-50%) translateY(' + lr(-IH * 1.1, 0, tP) + 'px)';
+    mfTori.style.opacity   = tP;
+  }
+
+  function tick() { draw(getP()); updateManifesto(); rafPending = false; }
+
+  window.addEventListener('scroll', function(){
+    if (!rafPending){ rafPending = true; requestAnimationFrame(tick); }
+  }, { passive: true });
+
+  /* Nav state */
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('s', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ── Reveal ──────────────────────────────── */
+  var mfTori     = document.querySelector('.mf-tori');
+  var mfEl       = document.getElementById('manifesto');
+  var mfRevEls   = document.querySelectorAll('#manifesto .reveal');
+  var mfRevealed = false;
+
+  /* Servicios + Contacto: IntersectionObserver normal */
+  var revEls = document.querySelectorAll('#servicios .reveal, #contacto .reveal');
+  var ro = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('v'); ro.unobserve(e.target); }
+    });
+  }, { threshold: 0.13, rootMargin: '0px 0px -30px 0px' });
+  revEls.forEach(function(el){ ro.observe(el); });
+
+  /* Safety net para servicios/contacto */
+  setTimeout(function(){
+    revEls.forEach(function(el){
+      var r = el.getBoundingClientRect();
+      if(r.top < IH && r.bottom > 0) el.classList.add('v');
+    });
+  }, 150);
+
+  /* ── Resize ──────────────────────────────── */
+  window.addEventListener('resize', function(){
+    IW = window.innerWidth; IH = window.innerHeight; tick();
+  });
+
+  /* ── Init ────────────────────────────────── */
+  tick(); /* Draw at current scroll position (handles refresh mid-scroll) */
+
+}());
+</script>
+</body>
+</html>
