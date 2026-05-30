@@ -402,7 +402,7 @@
 
 <!-- ═══ MANIFESTO ═══ -->
 <section id="manifesto" aria-label="Manifiesto">
-  <video class="bg-video" id="mfVideo" src="assets/bg-video.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+  <video class="bg-video" id="mfVideo" src="assets/bg-video.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
   <img class="mf-tori" src="assets/capa-tori-arboles.png" alt=""
     draggable="false" loading="eager" decoding="async" aria-hidden="true">
   <div class="mf-ov"  aria-hidden="true"></div>
@@ -604,11 +604,8 @@
     mfTori.style.transform = 'translateX(-50%) translateY(' + lr(-IH * 1.1, 0, tP) + 'px)';
     mfTori.style.opacity   = tP;
 
-    /* Scroll scrubbing del vídeo */
-    if (mfVideo && mfVideo.readyState >= 2 && mfVideo.duration) {
-      var t = sectionProg * mfVideo.duration;
-      if (mfVideo.fastSeek) { mfVideo.fastSeek(t); } else { mfVideo.currentTime = t; }
-    }
+    /* Velocidad de reproducción */
+    if (mfVideo && mfVideo.playbackRate !== 0.5) mfVideo.playbackRate = 0.5;
   }
 
   function tick() { draw(getP()); updateManifesto(); rafPending = false; }
