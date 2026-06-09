@@ -3,11 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MUGEN — Sin límite. Sin destino. Solo el camino.">
-  <title>MUGEN — 無限</title>
+  <meta name="description" content="Guillermo Ibáñez 'Yosolohagotattoos' — tatuador especialista en neotradicional y blackwork en Castellón de la Plana. Diseño personalizado, trazos únicos. Reserva tu sesión por WhatsApp.">
+  <title>Guillermo Ibáñez · Tatuador Neotradicional y Blackwork en Castellón</title>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Guillermo Ibáñez",
+    "alternateName": ["Guille Tattoo", "Yosolohagotattoos"],
+    "jobTitle": "Artista del Tatuaje",
+    "description": "Tatuador especializado en estilo neotradicional y blackwork en Castellón de la Plana",
+    "sameAs": ["https://www.instagram.com/yosolohagotattoos/"],
+    "worksFor": {
+      "@type": "LocalBusiness",
+      "name": "Dacapo Tattoo & Piercing",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Castellón de la Plana",
+        "addressRegion": "Comunitat Valenciana",
+        "addressCountry": "ES"
+      },
+      "telephone": "+34615477362",
+      "sameAs": "https://www.instagram.com/dacapostudio/"
+    },
+    "knowsAbout": ["Neotradicional", "Blackwork", "Tatuaje japonés", "Sleeve", "Diseño personalizado"]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Shippori+Mincho:wght@400;700&family=Shojumaru&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -54,21 +80,17 @@
       position: sticky; top: 0;
       height: 100vh; height: 100svh;
       min-height: 580px;
-      /* Sin overflow:hidden — el clip solo aplica al contenedor de montañas */
     }
-    /* Clip solo para las montañas (entran desde abajo) */
     .h-clip {
       position: absolute; inset: 0;
       overflow: hidden; z-index: 3; pointer-events: none;
     }
 
-    /* Sky — always visible */
     .h-sky {
       position: absolute; inset: 0; z-index: 1;
       background: url('assets/fondo-cielo-web.jpg') center/cover no-repeat;
     }
 
-    /* Gradient overlay */
     .h-ov {
       position: absolute; inset: 0; z-index: 2; pointer-events: none;
       background: linear-gradient(to bottom,
@@ -77,7 +99,6 @@
         rgba(5,5,13,.97) 100%);
     }
 
-    /* Mountains — dentro de .h-clip, JS controla transform+opacity */
     .h-mtn {
       position: absolute; bottom: 0; left: 50%;
       width: max(100%, 900px); height: auto;
@@ -87,7 +108,6 @@
       will-change: transform, opacity;
     }
 
-    /* Kanji group — reemplaza la katana, entra desde la derecha */
     .h-kanji-group {
       position: absolute; top: 50%; left: 62%; z-index: 5;
       transform: translate(-50%, -50%);
@@ -105,12 +125,11 @@
       letter-spacing: .02em;
     }
 
-    /* Text block */
     .h-content {
       position: absolute; inset: 0; z-index: 7;
       display: flex; flex-direction: column;
       justify-content: flex-end; align-items: flex-start;
-      padding: 0 7% 7%; pointer-events: none;
+      padding: 0 7% 4.5%; pointer-events: none;
       overflow: hidden;
     }
 
@@ -122,19 +141,31 @@
       opacity: 0; will-change: opacity;
     }
     .h-brand {
-      font-family: var(--fd); font-weight: 900;
-      font-size: clamp(3.8rem,11vw,9.5rem); line-height: 1;
-      letter-spacing: .18em; color: var(--white);
+      position: absolute; bottom: 10%; right: 7%;
+      width: clamp(250px, 28vw, 390px);
+      height: auto; display: block;
+      mix-blend-mode: multiply;
+      filter: contrast(1.1) brightness(.85);
+      opacity: 0; transform: translateY(28px);
+      will-change: opacity, transform;
+    }
+    .h-brand-txt {
+      font-family: var(--fd); font-weight: 400;
+      font-size: clamp(3.8rem, 11vw, 10rem);
+      letter-spacing: .22em; color: var(--white); line-height: 1;
+      text-shadow:
+        0 0 70px rgba(204,0,0,.4),
+        0 2px 18px rgba(0,0,0,.9);
       opacity: 0; transform: translateY(28px);
       will-change: opacity, transform;
     }
     .h-tagline {
       font-family: var(--fj); font-style: normal; font-weight: 400;
       font-size: clamp(1rem,1.9vw,1.45rem);
-      color: rgba(255,255,255,.92);
-      text-shadow: 0 0 28px rgba(204,0,0,.55);
+      color: rgba(255,255,255,.98);
+      text-shadow: 0 0 32px rgba(204,0,0,.65), 0 1px 14px rgba(0,0,0,.95);
       letter-spacing: .18em;
-      margin-top: .8rem; min-height: 1.8em;
+      margin-top: 3.5rem; min-height: 1.8em;
       opacity: 0; transform: translateY(18px);
       will-change: opacity, transform;
     }
@@ -144,7 +175,9 @@
     .h-rule { height: 1px; background: var(--red-v); margin: 1.2rem 0 1rem; width: 0; will-change: width; }
     .h-sub {
       font-family: var(--fj); font-size: clamp(.78rem,1.2vw,.95rem); font-weight: 400;
-      letter-spacing: .42em; color: rgba(255,255,255,.55); text-transform: uppercase;
+      letter-spacing: .42em; color: rgba(255,255,255,.92); text-transform: uppercase;
+      text-shadow: 0 1px 10px rgba(0,0,0,.9);
+      margin-top: 5rem;
       opacity: 0; will-change: opacity;
     }
     .h-cta {
@@ -169,7 +202,6 @@
     .h-cta:hover::before { transform: translateX(0); }
     .h-cta > span { position: relative; z-index: 1; }
 
-    /* Scroll hint */
     .h-hint {
       position: absolute; bottom: 2.2rem; left: 50%;
       transform: translateX(-50%); z-index: 8;
@@ -198,7 +230,6 @@
       background-color: #08080f;
     }
 
-    /* Vídeo de fondo compartido */
     .bg-video {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
@@ -206,12 +237,11 @@
       z-index: 0; opacity: .28;
     }
 
-    /* Tori — paralax scroll-driven de arriba a abajo, JS controla transform+opacity */
     .mf-tori {
       position: absolute; bottom: 0; left: 50%;
       width: max(100%,1100px); height: auto;
       transform: translateX(-50%) translateY(-110vh);
-      z-index: 2; /* por encima del overlay (.mf-ov z-index:1) para que sea visible */
+      z-index: 2;
       pointer-events: none;
       mix-blend-mode: screen;
       opacity: 0;
@@ -245,12 +275,70 @@
 
     .mf-body p { font-family: var(--fs); font-weight: 500; font-size: clamp(1rem,1.45vw,1.22rem); line-height: 1.9; color: rgba(244,239,232,.88); margin-bottom: 1.4rem; }
 
-    .mf-quote { border-top: 1px solid rgba(255,255,255,.055); border-bottom: 1px solid rgba(255,255,255,.055); padding: 3.5rem 0; text-align: center; }
-    .mf-quote-jp { font-family: var(--fs); font-weight: 300; font-size: clamp(2rem,5vw,4.5rem); color: rgba(192,57,43,.22); letter-spacing: .2em; margin-bottom: .8rem; }
-    .mf-quote-tx { font-family: var(--fs); font-style: italic; font-weight: 500; font-size: clamp(1.05rem,1.7vw,1.45rem); color: rgba(244,239,232,.88); }
+    /* ── TICKER MANIFESTO ───────────────────── */
+    .mf-ticker {
+      position: relative; overflow: hidden;
+      margin-top: 4rem;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+    }
+    .mf-ticker-track {
+      display: flex; gap: .75rem;
+      width: max-content;
+      animation: tickerMove 42s linear infinite;
+    }
+    .mf-ticker-track:hover { animation-play-state: paused; }
+    @keyframes tickerMove {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .mf-ticker-item {
+      flex-shrink: 0; width: 280px; height: 373px; overflow: hidden;
+    }
+    .mf-ticker-item img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: brightness(.88) saturate(.9);
+      transition: filter .4s;
+    }
+    .mf-ticker-item:hover img { filter: brightness(1.05) saturate(1.15); }
 
-    /* ── SERVICIOS ──────────────────────────── */
-    #servicios {
+    /* ── GALERÍA ────────────────────────────── */
+    #galeria {
+      background: #07070e;
+      padding: 9rem 0 10rem;
+    }
+    .gal-hdr { margin-bottom: 3rem; }
+    .gal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .7rem;
+    }
+    .gal-item {
+      overflow: hidden;
+      aspect-ratio: 3 / 4;
+      position: relative;
+      background: var(--black);
+      cursor: pointer;
+    }
+    .gal-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(.85) saturate(.8);
+      transition: transform .6s ease, filter .6s ease;
+    }
+    .gal-item:hover img {
+      transform: scale(1.07);
+      filter: brightness(1) saturate(1.1);
+    }
+    .gal-item::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(5,5,13,.6) 0%, transparent 45%);
+      pointer-events: none;
+    }
+
+    /* ── ESTILOS ────────────────────────────── */
+    #estilos {
       background-color: var(--black);
       background-image:
         radial-gradient(circle, rgba(204,0,0,.36) 2px, transparent 2px),
@@ -294,17 +382,31 @@
     .ct-btn::before { content: ''; position: absolute; inset: 0; background: var(--red-b); transform: translateY(102%); transition: transform .38s cubic-bezier(.25,.46,.45,.94); }
     .ct-btn:hover::before { transform: translateY(0); }
     .ct-btn > span { position: relative; z-index: 1; }
+    .ct-studio {
+      font-family: var(--fj); font-size: .85rem;
+      color: rgba(244,239,232,.38);
+      margin-top: 2rem; letter-spacing: .06em;
+    }
+    .ct-studio a {
+      color: rgba(244,239,232,.6); text-decoration: none;
+      border-bottom: 1px solid rgba(204,0,0,.35);
+      transition: color .3s, border-color .3s;
+    }
+    .ct-studio a:hover { color: var(--white); border-color: var(--red-v); }
 
     /* ── FOOTER ─────────────────────────────── */
     footer { background: var(--black); border-top: 1px solid rgba(255,255,255,.045); padding: 2.4rem 7%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     .ft-logo { font-family: var(--fd); font-size: .9rem; font-weight: 700; letter-spacing: .32em; color: var(--white); }
     .ft-copy { font-family: var(--fs); font-size: .8rem; color: var(--gray); }
+    .ft-copy a { color: var(--gray); text-decoration: none; transition: color .3s; }
+    .ft-copy a:hover { color: var(--white); }
     .ft-kanji { font-family: var(--fs); font-size: 1.4rem; color: rgba(192,57,43,.28); }
 
     /* ── RESPONSIVE ─────────────────────────── */
     @media (max-width: 1024px) {
       .mf-grid { grid-template-columns: 1fr; gap: 3.5rem; }
       .sv-grid  { grid-template-columns: 1fr 1fr; }
+      .gal-grid { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 768px) {
       nav { padding: 1.1rem 5%; }
@@ -316,32 +418,33 @@
       .hkg { font-size: clamp(3rem,10vw,5rem); }
       .mf-tori { width: max(140%,1000px); }
       .mf-grid { gap: 2.5rem; }
-      .mf-quote { padding: 2.5rem 0; }
+      .mf-ticker-item { width: 210px; height: 280px; }
       .sv-grid { grid-template-columns: 1fr; gap: 0; }
       .sv-card { min-height: auto; padding: 2.2rem 1.8rem 2.8rem; }
       #contacto { padding: 7rem 0 6rem; }
       .ct-title { font-size: clamp(2rem,8vw,3.5rem); }
       footer { flex-direction: column; text-align: center; gap: .6rem; }
+      .gal-grid { grid-template-columns: repeat(2, 1fr); gap: .5rem; }
     }
     @media (max-width: 480px) {
-      #servicios, #manifesto, #contacto { padding-top: 4.5rem; padding-bottom: 5rem; }
+      #estilos, #manifesto, #contacto, #galeria { padding-top: 4.5rem; padding-bottom: 5rem; }
       .h-kanji-group { left: 72%; }
       .hkg { font-size: clamp(2.4rem,11vw,3.8rem); }
-      .h-brand { letter-spacing: .1em; }
+      .h-brand { width: clamp(180px, 48vw, 280px); right: 3%; }
       .h-tagline { font-size: clamp(.92rem,4.2vw,1.1rem); letter-spacing: .12em; }
       .h-sub { letter-spacing: .3em; }
       .mf-inner { padding: 0 5%; }
       .h2 { font-size: clamp(1.6rem,7vw,2.4rem); }
-      .mf-quote-jp { font-size: clamp(1.6rem,9vw,3rem); }
-      .mf-quote-tx { font-size: clamp(.92rem,4vw,1.1rem); }
+      .mf-ticker-item { width: 160px; height: 213px; }
       .ct-btn { padding: .9rem 2rem; letter-spacing: .15em; }
       .sv-card { padding: 1.8rem 1.4rem 2.2rem; }
+      .gal-grid { grid-template-columns: repeat(2, 1fr); gap: .4rem; }
     }
 
     /* ── REDUCED MOTION ─────────────────────── */
     @media (prefers-reduced-motion: reduce) {
       #hero-wrap { height: 100vh; }
-      .h-kanji, .h-brand, .h-sub, .h-tagline, .h-cta { opacity: 1 !important; transform: none !important; }
+      .h-kanji, .h-brand, .h-brand-txt, .h-sub, .h-tagline, .h-cta { opacity: 1 !important; transform: none !important; }
       .h-mtn         { opacity: 1 !important; transform: translateX(-50%) !important; }
       .h-kanji-group { opacity: 1 !important; transform: translate(-50%,-50%) !important; }
       .h-rule { width: 90px !important; }
@@ -353,10 +456,11 @@
 <body>
 
 <nav id="nav">
-  <a href="#hero-wrap" class="nav-logo">MU<b>GEN</b></a>
+  <a href="#hero-wrap" class="nav-logo">YOSOLO<b>HAGO</b></a>
   <ul class="nav-links">
     <li><a href="#manifesto">Manifiesto</a></li>
-    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#estilos">Estilos</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
 </nav>
@@ -368,7 +472,6 @@
     <div class="h-sky" aria-hidden="true"></div>
     <div class="h-ov"  aria-hidden="true"></div>
 
-    <!-- Clip container: solo afecta a las montañas, no a la katana -->
     <div class="h-clip" aria-hidden="true">
       <img class="h-mtn" id="hMtn"
         src="assets/montanas.png" alt=""
@@ -383,13 +486,18 @@
 
     <div class="h-content">
       <p class="h-kanji" id="hKanji" aria-hidden="true">無限</p>
-      <h1 class="h-brand" id="hBrand">MUGEN</h1>
-      <p class="h-tagline" id="hTagline" aria-label="Donde termina el límite, empieza la leyenda.">
+      <img class="h-brand" id="hBrand"
+        src="assets/guille.png"
+        alt="Guille Ibáñez — Tatuador neotradicional y blackwork en Castellón de la Plana"
+        draggable="false" loading="eager" decoding="async">
+      <p class="h-brand-txt" id="hBrandTxt">GUILLE</p>
+      <p class="h-tagline" id="hTagline" aria-label="El tatuaje que llevarás toda la vida merece al artista que lo entiende.">
         <span id="hTwTxt"></span><span class="tw-cursor" id="hTwCur">|</span>
       </p>
       <div class="h-rule" id="hRule"></div>
-      <p class="h-sub" id="hSub">Estudio Creativo &nbsp;·&nbsp; Diseño &nbsp;·&nbsp; Estrategia</p>
-      <a href="#manifesto" class="h-cta" id="hCta"><span>Descubre el camino</span></a>
+      <p class="h-sub" id="hSub">Tatuador &nbsp;·&nbsp; Neotradicional<br>Blackwork &nbsp;·&nbsp; Castellón</p>
+      <a href="https://api.whatsapp.com/send/?phone=34615477362&text&type=phone_number&app_absent=0"
+         class="h-cta" id="hCta" target="_blank" rel="noopener"><span>Reserva tu sesión</span></a>
     </div>
 
     <div class="h-hint" id="hHint" aria-hidden="true">
@@ -412,27 +520,79 @@
     <div class="mf-grid">
       <div class="mf-left reveal">
         <span class="lbl">Manifiesto</span>
-        <h2 class="h2">El Camino<br>es la <em>Meta</em></h2>
+        <h2 class="h2">El trazo que<br>no <em>desaparece</em></h2>
       </div>
       <div class="mf-body reveal" style="transition-delay:.12s;padding-top:.6rem">
-        <p>No existe el destino para quien domina el presente. Cada trazo, cada decisión, cada proyecto nace de la misma convicción: la excelencia no se improvisa, se forja.</p>
-        <p>MUGEN no es un estudio. Es una disciplina. Como el samurái que perfecciona su técnica durante años antes de desenfundar, dedicamos cada recurso a dominar el oficio antes de presentar el trabajo.</p>
-        <p>Sin límite en la ambición. Sin destino predefinido. Solo el camino y lo que construimos en él.</p>
+        <p>Un tatuaje no es decoración. Es una decisión permanente que merece el tiempo, la honestidad y la precisión de alguien que entiende lo que significa llevar algo para siempre.</p>
+        <p>Cada pieza nace de un proceso real: escuchar, diseñar desde cero, refinar hasta que el trazo y la persona se reconocen. No hay plantillas, no hay prisas, no hay atajos.</p>
+        <p>El neotradicional y el blackwork son mi lenguaje. Pero el diseño es siempre tuyo.</p>
       </div>
     </div>
-    <div class="mf-quote reveal" style="transition-delay:.2s">
-      <p class="mf-quote-jp" aria-hidden="true">無限の可能性</p>
-      <p class="mf-quote-tx">«Posibilidades sin límite para quienes eligen el camino difícil.»</p>
+  </div>
+
+  <!-- Ticker de trabajos — reemplazar src por fotos reales en assets/ -->
+  <div class="mf-ticker">
+    <div class="mf-ticker-track">
+      <div class="mf-ticker-item"><img src="assets/tattoo-01.png" alt="Sleeve neotradicional — Guille Ibáñez Castellón"></div>
+      <div class="mf-ticker-item"><img src="assets/tattoo-02.png" alt="Máscara Hannya neotradicional — Yosolohagotattoos Castellón"></div>
+      <div class="mf-ticker-item"><img src="assets/tattoo-03.png" alt="Serpiente neotradicional — Guille Ibáñez Castellón"></div>
+      <div class="mf-ticker-item"><img src="assets/tattoo-04.png" alt="Ojo neotradicional — Yosolohagotattoos Castellón"></div>
+      <div class="mf-ticker-item"><img src="assets/tattoo-05.png" alt="Pantera neotradicional — Guille Ibáñez Castellón"></div>
+      <div class="mf-ticker-item"><img src="assets/tattoo-06.png" alt="Daga neotradicional — Yosolohagotattoos Castellón"></div>
+      <!-- duplicado para loop sin corte -->
+      <div class="mf-ticker-item" aria-hidden="true"><img src="assets/tattoo-01.png" alt=""></div>
+      <div class="mf-ticker-item" aria-hidden="true"><img src="assets/tattoo-02.png" alt=""></div>
+      <div class="mf-ticker-item" aria-hidden="true"><img src="assets/tattoo-03.png" alt=""></div>
+      <div class="mf-ticker-item" aria-hidden="true"><img src="assets/tattoo-04.png" alt=""></div>
+      <div class="mf-ticker-item" aria-hidden="true"><img src="assets/tattoo-05.png" alt=""></div>
+      <div class="mf-ticker-item" aria-hidden="true"><img src="assets/tattoo-06.png" alt=""></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SERVICIOS ═══ -->
-<section id="servicios" aria-label="Servicios">
+<!-- ═══ GALERÍA ═══ -->
+<section id="galeria" aria-label="Galería de trabajos">
+  <div class="wrap">
+    <div class="gal-hdr reveal">
+      <span class="lbl">Galería</span>
+      <h2 class="h2" style="max-width:520px">Trabajos <em>recientes</em>.</h2>
+    </div>
+  </div>
+  <div class="gal-grid wrap">
+    <!-- Sustituir estas imágenes por fotos reales de Guille -->
+    <div class="gal-item reveal">
+      <img src="https://placehold.co/400x530/0c0c17/cc0000?text=Foto+tatuaje+1"
+           alt="Tatuaje neotradicional — Guille Ibáñez Castellón" loading="lazy">
+    </div>
+    <div class="gal-item reveal" style="transition-delay:.08s">
+      <img src="https://placehold.co/400x530/05050d/887d6c?text=Foto+tatuaje+2"
+           alt="Blackwork — Yosolohagotattoos Castellón de la Plana" loading="lazy">
+    </div>
+    <div class="gal-item reveal" style="transition-delay:.16s">
+      <img src="https://placehold.co/400x530/0c0c17/c9a84c?text=Foto+tatuaje+3"
+           alt="Diseño japonés neotradicional — Guille Ibáñez Castellón" loading="lazy">
+    </div>
+    <div class="gal-item reveal" style="transition-delay:.24s">
+      <img src="https://placehold.co/400x530/07070e/cc0000?text=Foto+tatuaje+4"
+           alt="Sleeve neotradicional Castellón — Yosolohagotattoos" loading="lazy">
+    </div>
+    <div class="gal-item reveal" style="transition-delay:.32s">
+      <img src="https://placehold.co/400x530/0c0c17/887d6c?text=Foto+tatuaje+5"
+           alt="Máscara Hannya blackwork — Dacapo Tattoo Castellón" loading="lazy">
+    </div>
+    <div class="gal-item reveal" style="transition-delay:.4s">
+      <img src="https://placehold.co/400x530/05050d/c9a84c?text=Foto+tatuaje+6"
+           alt="Proyecto personalizado neotradicional — Guille Ibáñez Castellón" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ESTILOS ═══ -->
+<section id="estilos" aria-label="Estilos">
   <div class="wrap">
     <div class="sv-hdr reveal">
-      <span class="lbl">Servicios</span>
-      <h2 class="h2" style="max-width:520px">Tres <em>disciplinas</em>.<br>Un solo objetivo.</h2>
+      <span class="lbl">Estilos</span>
+      <h2 class="h2" style="max-width:520px">Tres <em>lenguajes</em>.<br>Una sola piel.</h2>
     </div>
     <div class="sv-grid">
 
@@ -440,30 +600,30 @@
         <span class="sv-bgn" aria-hidden="true">01</span>
         <p class="sv-n">01</p>
         <span class="sv-ico" aria-hidden="true">⬡</span>
-        <h3 class="sv-nm">Identidad de Marca</h3>
-        <p class="sv-tag">«Forja tu esencia»</p>
-        <p class="sv-dsc">Creamos identidades que resisten el tiempo. Logotipo, sistema visual y voz de marca construidos desde la estrategia, no desde la intuición.</p>
-        <span class="sv-arr">Saber más →</span>
+        <h3 class="sv-nm">Neotradicional</h3>
+        <p class="sv-tag">«Color con alma»</p>
+        <p class="sv-dsc">Líneas contundentes, paleta rica y narrativa propia. El neotradicional toma la iconografía clásica y la lleva más lejos: cada pieza cuenta una historia sin perder impacto visual.</p>
+        <span class="sv-arr">Ver galería →</span>
       </article>
 
       <article class="sv-card reveal" style="transition-delay:.1s">
         <span class="sv-bgn" aria-hidden="true">02</span>
         <p class="sv-n">02</p>
         <span class="sv-ico" aria-hidden="true">◈</span>
-        <h3 class="sv-nm">Diseño Digital</h3>
-        <p class="sv-tag">«Cada píxel, una intención»</p>
-        <p class="sv-dsc">Webs, interfaces y experiencias digitales donde estética y función conviven sin concesiones. Diseño que convierte sin perder belleza.</p>
-        <span class="sv-arr">Saber más →</span>
+        <h3 class="sv-nm">Blackwork</h3>
+        <p class="sv-tag">«La oscuridad que dura»</p>
+        <p class="sv-dsc">Negro absoluto, contraste extremo, piezas de impacto inmediato. El blackwork no necesita color para dominar la piel — solo precisión, técnica y convicción.</p>
+        <span class="sv-arr">Ver galería →</span>
       </article>
 
       <article class="sv-card reveal" style="transition-delay:.2s">
         <span class="sv-bgn" aria-hidden="true">03</span>
         <p class="sv-n">03</p>
         <span class="sv-ico" aria-hidden="true">◇</span>
-        <h3 class="sv-nm">Estrategia Creativa</h3>
-        <p class="sv-tag">«El arte de la guerra moderna»</p>
-        <p class="sv-dsc">Posicionamiento, narrativa de marca y contenido estratégico. Porque antes de comunicar hay que saber exactamente qué decir y a quién.</p>
-        <span class="sv-arr">Saber más →</span>
+        <h3 class="sv-nm">Proyectos completos</h3>
+        <p class="sv-tag">«Tu historia en piel»</p>
+        <p class="sv-dsc">Sleeves, piezas de gran formato y diseños totalmente personalizados. Desde el primer boceto hasta la sesión final, el proceso es tan importante como el resultado.</p>
+        <span class="sv-arr">Reserva sesión →</span>
       </article>
 
     </div>
@@ -476,16 +636,27 @@
   <img class="ct-mtn" src="assets/montanas.png" alt="" draggable="false" loading="lazy" decoding="async" aria-hidden="true">
   <div class="ct-ov" aria-hidden="true"></div>
   <div class="ct-in">
-    <span class="lbl reveal">Inicia tu camino</span>
-    <h2 class="ct-title reveal" style="transition-delay:.1s">¿Listo para<br>forjar tu marca?</h2>
-    <p class="ct-sub reveal" style="transition-delay:.2s">Sin formularios. Sin esperas.<br>Una conversación directa.</p>
-    <a href="mailto:hola@mugen.studio" class="ct-btn reveal" style="transition-delay:.3s"><span>hola@mugen.studio</span></a>
+    <span class="lbl reveal">Inicia tu proyecto</span>
+    <h2 class="ct-title reveal" style="transition-delay:.1s">¿Listo para<br>tu tatuaje?</h2>
+    <p class="ct-sub reveal" style="transition-delay:.2s">Sin formularios. Sin esperas.<br>Habla directamente con Guille.</p>
+    <a href="https://api.whatsapp.com/send/?phone=34615477362&text&type=phone_number&app_absent=0"
+       class="ct-btn reveal" style="transition-delay:.3s" target="_blank" rel="noopener">
+      <span>Escríbeme por WhatsApp</span>
+    </a>
+    <p class="ct-studio reveal" style="transition-delay:.45s">
+      Trabajo en <a href="https://www.instagram.com/dacapostudio/" target="_blank" rel="noopener">Dacapo Tattoo &amp; Piercing</a> · Castellón de la Plana
+    </p>
   </div>
 </section>
 
 <footer>
-  <span class="ft-logo">MUGEN</span>
-  <span class="ft-copy">© 2025 MUGEN Studio · Todos los derechos reservados</span>
+  <span class="ft-logo">YOSOLOHAGO</span>
+  <span class="ft-copy">
+    © 2025 Guillermo Ibáñez &nbsp;·&nbsp;
+    <a href="https://www.instagram.com/yosolohagotattoos/" target="_blank" rel="noopener">@yosolohagotattoos</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.instagram.com/dacapostudio/" target="_blank" rel="noopener">@dacapostudio</a>
+  </span>
   <span class="ft-kanji" aria-hidden="true">無限</span>
 </footer>
 
@@ -498,7 +669,8 @@
   var mtn      = document.getElementById('hMtn');
   var kanjiGrp = document.getElementById('hKanjiGrp');
   var kanji    = document.getElementById('hKanji');
-  var brand= document.getElementById('hBrand');
+  var brand    = document.getElementById('hBrand');
+  var brandTxt = document.getElementById('hBrandTxt');
   var tagl = document.getElementById('hTagline');
   var twTxt= document.getElementById('hTwTxt');
   var twCur= document.getElementById('hTwCur');
@@ -510,46 +682,46 @@
 
   /* Sequence timing (progress 0→1) */
   var T = {
-    KJ_A:.04, KJ_B:.18,   /* kanji  */
-    BR_A:.02, BR_B:.14,   /* brand  */
-    MT_A:.26, MT_B:.52,   /* mountains */
-    KT_A:.44, KT_B:.68,   /* kanji group */
-    TG_A:.64, TG_B:.82,   /* tagline */
-    RL_A:.74, RL_B:.86,   /* rule   */
-    SB_A:.78, SB_B:.90,   /* sub    */
-    CA_A:.86, CA_B:.97,   /* cta    */
+    KJ_A:.04, KJ_B:.18,
+    BR_A:.02, BR_B:.14,   /* texto GUILLE */
+    IM_A:.38, IM_B:.64,   /* foto — aparece más tarde */
+    MT_A:.26, MT_B:.52,
+    KT_A:.44, KT_B:.68,
+    TG_A:.64, TG_B:.82,
+    RL_A:.74, RL_B:.86,
+    SB_A:.78, SB_B:.90,
+    CA_A:.86, CA_B:.97,
   };
 
-  var TAGLINE   = 'Donde termina el límite, empieza la leyenda.';
-  var IW        = window.innerWidth;
-  var IH        = window.innerHeight;
+  var TAGLINE = 'El tatuaje que llevarás toda la vida merece al artista que lo entiende.';
+  var IW      = window.innerWidth;
+  var IH      = window.innerHeight;
 
   function cl(v,a,b){ return Math.max(0,Math.min(1,(v-a)/(b-a))); }
   function lr(a,b,t){ return a+(b-a)*t; }
-  function eo(t)    { return 1-Math.pow(1-t,3); }   /* ease-out cubic */
+  function eo(t)    { return 1-Math.pow(1-t,3); }
 
   /* ── Draw at progress p ─────────────────── */
   function draw(p) {
 
-    /* Kanji */
     kanji.style.opacity = eo(cl(p,T.KJ_A,T.KJ_B)) * 0.26;
 
-    /* MUGEN brand */
     var brP = eo(cl(p,T.BR_A,T.BR_B));
-    brand.style.opacity   = brP;
-    brand.style.transform = 'translateY('+lr(IH*0.75,0,brP)+'px)';
+    brandTxt.style.opacity   = brP;
+    brandTxt.style.transform = 'translateY('+lr(IH*0.75,0,brP)+'px)';
 
-    /* Mountains */
+    var imP = eo(cl(p,T.IM_A,T.IM_B));
+    brand.style.opacity   = imP;
+    brand.style.transform = 'translateY('+lr(IH*0.75,0,imP)+'px)';
+
     var mtP = eo(cl(p,T.MT_A,T.MT_B));
     mtn.style.opacity   = mtP;
     mtn.style.transform = 'translateX(-50%) translateY('+lr(IH*1.18,0,mtP)+'px)';
 
-    /* Kanji group — entra desde la derecha */
     var kgP = eo(cl(p,T.KT_A,T.KT_B));
     kanjiGrp.style.opacity   = kgP;
     kanjiGrp.style.transform = 'translate(calc(-50% + '+lr(IW*1.18,0,kgP)+'px),-50%)';
 
-    /* Tagline — scroll-driven typewriter */
     var tgRaw = cl(p,T.TG_A,T.TG_B);
     var tgP   = eo(tgRaw);
     tagl.style.opacity   = tgP;
@@ -558,19 +730,15 @@
     twTxt.textContent = TAGLINE.slice(0, shown);
     twCur.style.display = (shown > 0 && shown < TAGLINE.length) ? 'inline' : 'none';
 
-    /* Rule */
     rule.style.width = lr(0,90,eo(cl(p,T.RL_A,T.RL_B)))+'px';
 
-    /* Sub */
     sub.style.opacity = eo(cl(p,T.SB_A,T.SB_B));
 
-    /* CTA */
     var caP = eo(cl(p,T.CA_A,T.CA_B));
     cta.style.opacity      = caP;
     cta.style.transform    = 'translateY('+lr(15,0,caP)+'px)';
     cta.style.pointerEvents = caP > 0.5 ? 'auto' : 'none';
 
-    /* Scroll hint */
     hint.style.opacity = p > 0.04 ? Math.max(0, 1-(p-0.04)/0.06) : 1;
   }
 
@@ -587,16 +755,11 @@
     var rect = mfEl.getBoundingClientRect();
     var mfH  = mfEl.offsetHeight;
 
-    /* Texto: aparece cuando el bloque llena la pantalla (rect.top ≤ 0) */
     if (!mfRevealed && rect.top <= IH * 0.45) {
       mfRevealed = true;
       mfRevEls.forEach(function(el){ el.classList.add('v'); });
     }
 
-    /* Torii: entra desde arriba solo en el tramo final del bloque
-       sectionProg 0 = bloque entrando desde abajo
-       sectionProg 1 = bloque saliendo por arriba
-       torii: de 0.68 a 0.95 (último tramo) */
     var scrolledSinceEntry = Math.max(0, IH - rect.top);
     var totalRange         = IH + mfH;
     var sectionProg        = scrolledSinceEntry / totalRange;
@@ -604,7 +767,6 @@
     mfTori.style.transform = 'translateX(-50%) translateY(' + lr(-IH * 1.1, 0, tP) + 'px)';
     mfTori.style.opacity   = tP;
 
-    /* Velocidad de reproducción */
     if (mfVideo && mfVideo.playbackRate !== 0.5) mfVideo.playbackRate = 0.5;
   }
 
@@ -614,7 +776,6 @@
     if (!rafPending){ rafPending = true; requestAnimationFrame(tick); }
   }, { passive: true });
 
-  /* Nav state */
   window.addEventListener('scroll', function(){
     nav.classList.toggle('s', window.scrollY > 60);
   }, { passive: true });
@@ -626,8 +787,7 @@
   var mfRevEls   = document.querySelectorAll('#manifesto .reveal');
   var mfRevealed = false;
 
-  /* Servicios + Contacto: IntersectionObserver normal */
-  var revEls = document.querySelectorAll('#servicios .reveal, #contacto .reveal');
+  var revEls = document.querySelectorAll('#galeria .reveal, #estilos .reveal, #contacto .reveal');
   var ro = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       if(e.isIntersecting){ e.target.classList.add('v'); ro.unobserve(e.target); }
@@ -635,7 +795,6 @@
   }, { threshold: 0.13, rootMargin: '0px 0px -30px 0px' });
   revEls.forEach(function(el){ ro.observe(el); });
 
-  /* Safety net para servicios/contacto */
   setTimeout(function(){
     revEls.forEach(function(el){
       var r = el.getBoundingClientRect();
@@ -649,7 +808,7 @@
   });
 
   /* ── Init ────────────────────────────────── */
-  tick(); /* Draw at current scroll position (handles refresh mid-scroll) */
+  tick();
 
 }());
 </script>
